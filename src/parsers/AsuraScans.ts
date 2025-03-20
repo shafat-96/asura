@@ -14,9 +14,7 @@ class AsuraScans extends MangaParser {
   override readonly name = 'AsuraScans';
   protected override baseUrl = 'https://asuracomic.net';
   private readonly fallbackProxies = [
-    'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?',
-    'https://cors-anywhere.herokuapp.com/'
+    'https://goodproxy.goodproxy.workers.dev/fetch?url='
   ];
   private currentProxyIndex = -1; // Start with direct access (no proxy)
   protected override logo = 'https://asuracomic.net/images/logo.png';
@@ -47,18 +45,14 @@ class AsuraScans extends MangaParser {
    * Request with proxy fallback
    */
   protected async requestWithFallback<T = any>(path: string): Promise<T> {
-    const maxAttempts = this.fallbackProxies.length + 1; // Direct + all proxies
-    let lastError: Error | null = null;
-    
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      this.currentProxyIndex = attempt - 1; // -1 for direct, 0+ for proxies
-      try {
+    // First try direct access
+    try {
+      this.currentProxyIndex = -1; // Direct access
         return await this.request<T>(this.getProxiedUrl(path));
       } catch (error: any) {
-        lastError = error;
-        console.log(`Request failed with ${this.currentProxyIndex < 0 ? 'direct access' : `proxy ${this.currentProxyIndex}`}, trying next option...`);
+      console.log(`Direct access failed, trying with goodproxy: ${error.message}`);
         
-        // Only retry if it's a network or 403/429 error
+      // If direct access fails with 403 or network error, try with proxy
         if (
           !error.response || 
           error.response.status === 403 || 
@@ -67,15 +61,17 @@ class AsuraScans extends MangaParser {
           error.code === 'ETIMEDOUT' || 
           error.code === 'ERR_NETWORK'
         ) {
-          continue;
+        try {
+          this.currentProxyIndex = 0; // Use the goodproxy
+          return await this.request<T>(this.getProxiedUrl(path));
+        } catch (proxyError: any) {
+          console.log(`Proxy access failed: ${proxyError.message}`);
+          throw proxyError;
+        }
         } else {
           throw error; // Re-throw non-network errors
         }
       }
-    }
-    
-    // If we've tried all options and still failed
-    throw lastError || new Error('All request attempts failed');
   }
 
   private formatId(id: string): string {

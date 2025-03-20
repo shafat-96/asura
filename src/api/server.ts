@@ -62,7 +62,7 @@ app.get('/api/search', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
@@ -93,7 +93,7 @@ app.get('/api/latest', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
@@ -117,7 +117,7 @@ app.get('/api/popular', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
@@ -137,7 +137,7 @@ app.get('/api/manga/:id(*)', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
@@ -157,7 +157,7 @@ app.get('/api/chapter/:id(*)', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
@@ -189,7 +189,7 @@ app.get('/api/series', async (req, res) => {
     // Check if it's a 403 error even after all retries
     if ((error as Error).message.includes('403')) {
       return res.status(503).json({ 
-        error: 'The manga site is currently blocking our requests. We are working on a solution.',
+        error: 'The manga site is currently blocking our requests. We are using goodproxy to mitigate this issue, but it may occasionally fail.',
         retry: true
       });
     }
